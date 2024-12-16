@@ -1,20 +1,20 @@
 <?php
 
-
-
 namespace App\Controllers;
 
-use App\Libraries\SmartyLib;
+class Home extends BaseController
+{
+    public function index()
+    {
+        $title = 'Trang chủ';
 
-class Home extends BaseController {
-    public function index() {
-    	
-        $smarty = new SmartyLib();
-var_dump( $smarty);die;
-        $data = [
-            'title' => 'Welcome to CodeIgniter with Smarty',
-            'message' => 'This is a demo of Smarty integration.'
-        ];
-        $smarty->view('home', $data);
-    }
+        // return view('welcome_message', ['title' => 'Welcome to CI 4']);
+        $flashSuccess = session()->getFlashdata('success');
+        $flasherror = session()->getFlashdata('error');
+        $flashwarning = session()->getFlashdata('warning');
+        return $this->smartyDisplay(
+            view: 'templates/home',
+            params: compact('title','flashSuccess','flasherror','flashwarning')
+        );
+    } 
 }
