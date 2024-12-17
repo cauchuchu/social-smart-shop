@@ -63,7 +63,11 @@ abstract class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
-
+        $module = $this->request->uri->getSegment(1);
+        if( $module != 'signin' && $module != 'signup'){
+            $this->checkLogin();
+        }
+       
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
@@ -97,5 +101,19 @@ abstract class BaseController extends Controller
             // https://github.com/smarty-php/smarty/issues/863
             // ->setDefaultModifiers(['escape:"htmlall"']); Or
             ->setEscapeHtml(true);
+    }
+
+    public function checkLogin()
+    {
+      
+        // Lấy dịch vụ session
+        $session = session();
+    
+        // Kiểm tra xem thông tin người dùng đã đăng nhập chưa (có session 'logged_in')
+        if (!$session->get('userId') || $session->get('userId') == 'NULL') {
+            // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+            return redirect()->to('/SmartShop/public/signin');
+            echo "22";die;
+        }
     }
 }
