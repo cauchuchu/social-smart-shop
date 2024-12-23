@@ -14,7 +14,7 @@
                   </li>
                   <li class="parent"><a href="#"><i class="icon mdi mdi-dot-circle"></i><span>Sản phẩm</span></a>
                   </li>
-                  <li class="parent"><a href="#"><i class="icon mdi mdi-border-all"></i><span>Nhân viên</span></a>
+                  <li class="parent"><a href="employee"><i class="icon mdi mdi-border-all"></i><span>Nhân viên</span></a>
 
                   </li>
                   

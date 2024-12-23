@@ -22,7 +22,7 @@
               <img src="images/sukien-logo.png">
             </div>
           </div>
-        </div>
+        </div> 
         <div class="form-login-cms">
           <!-- <div class="thumbnail"></div> -->
           <h4 id="login-title">Đăng nhập</h4>
@@ -30,7 +30,7 @@
             <input type="number" id="mobile" placeholder="Số điện thoại" name="mobile" required="required">
             <input type="password" id="password" placeholder="Mật khẩu" name="password" required="required">
             <div id="message" style="margin-top: 20px; color: red;"></div>
-            <button type="submit" class="btn btn-primary login-btn">Đăng nhập</button>
+            <button type="button" class="btn btn-primary login-btn">Đăng nhập</button>
 
           </form>
           <p class="sign-now">Bạn chưa có tài khoản? <a href="/SmartShop/public/signup">Đăng ký ngay</a>
@@ -45,43 +45,8 @@
       </div>
     </div>
   </body>
-</html>
-{literal}
-  <script>
-        $(document).ready(function () {
-            // Xử lý sự kiện submit form
-            $('#login-form').on('submit', function (e) {
-                e.preventDefault(); // Ngăn chặn submit form thông thường
-
-                var mobile = $('#mobile').val();
-                var password = $('#password').val();
-
-                // Gửi request Ajax
-                $.ajax({
-                    url: 'check-login', // URL backend để xử lý login
-                    type: 'POST',
-                    data: {
-                        mobile: mobile,
-                        password: password
-                    },
-                    success: function (response) {
-                        // Kiểm tra phản hồi từ server
-                        if (response.success) {
-                            $('#message').css('color', 'green').text('Login successful!');
-                            // Thực hiện redirect hoặc hành động khác
-                            window.location.href = '/dashboard';
-                        } else {
-                            $('#message').css('color', 'red').text(response.message || 'Login failed!');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // Xử lý lỗi
-                        $('#message').css('color', 'red').text('An error occurred. Please try again.');
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    </script>
+  {literal}
+<script src="..\assets\js\register.js" type="text/javascript"></script>
 {/literal}
+</html>
 {/block}

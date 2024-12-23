@@ -31,6 +31,12 @@ class Login extends BaseController
         $user = $EmployeeModel->where('mobile', $mobile)->first();
 
         if ($user && password_verify($password, $user['password'])) {
+            if($user['status'] == 0){
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Tài khoản đã tạm ngừng hoạt động, vui lòng liên hệ chủ shop!'
+                ]);
+            }
             // Đăng nhập thành công
             $session = session();
             $session->set([
@@ -57,6 +63,7 @@ class Login extends BaseController
     {
         session_start();
         // Xóa tất cả các biến session
+        $_SESSION = [];
         session_unset();
         // Hủy session
         session_destroy();
@@ -66,7 +73,7 @@ class Login extends BaseController
             setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
         }
 
-        return redirect()->to('/SmartShop/public/login');  // Chuyển hướng đến trang đăng nhập
+        return redirect()->to('/SmartShop/public/signin');  // Chuyển hướng đến trang đăng nhập
     }
     
 }

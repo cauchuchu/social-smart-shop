@@ -14,6 +14,8 @@
     <link rel="stylesheet" type="text/css" href="..\assets\lib\jqvmap\jqvmap.min.css">
     <link rel="stylesheet" type="text/css" href="..\assets\lib\datetimepicker\css\bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="..\assets\css\app.css" type="text/css">
+    <link rel="stylesheet" href="..\assets\css\base.css" type="text/css">
+    <link rel="stylesheet" href="..\assets\css\notify.css" type="text/css">
   </head>
   <body>
     <div class="be-wrapper be-fixed-sidebar">
@@ -97,20 +99,4 @@
       <!-- Hiển thị flashdata nếu có -->
    
       <div class="be-content">
-      {if $flashSuccess}
-        <div class="alert alert-success">
-            {$flashSuccess}
-        </div>
-      {/if}
-       {if $flasherror}
-        <div class="alert alert-danger">
-            {$flasherror}
-        </div>
-      {/if}
-
-      <!-- Hiển thị thông báo cảnh báo -->
-      {if $flashwarning}
-        <div class="alert alert-warning">
-            {$flashwarning}
-        </div>
-      {/if}
+     

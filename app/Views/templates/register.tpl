@@ -45,13 +45,13 @@
           <form id="signup-form" class="form-horizontal" action="register" method="post">
             <?= csrf_field() ?>
             <div class="err error-name"></div>
-            <input type="text" placeholder="Nhập tên cửa hàng" class="" name="shop_name" required="required">
+            <input type="text" placeholder="Nhập tên cửa hàng" class="shop_name" name="shop_name" required="required">
             <input type="text" placeholder="Họ và tên của bạn" class="name" name="name" required="required">
             <input type="number" placeholder="Số điện thoại" class="mobile" name="mobile" required="required">
             <div class="err error-mobile"></div>
             <div style="position: relative;">
               <input type="password" placeholder="Mật khẩu" class="password" name="password" required="required" style="margin-bottom: 10px">
-              <i class="fa fa-eye show-password" data-toggle="tooltip" title="Ẩn hiện password" data-check="0" data-option="old" aria-hidden="true" style=""></i>
+              <i class="fa fa-eye show-password" data-toggle="tooltip" title="Ẩn hiện password" aria-hidden="true" ></i>
               <div class="err error-pass"></div>
             </div>
             <button type="submit" class="btn btn-primary btn-sign-up mt-20">Đăng ký</button>
@@ -61,6 +61,11 @@
         </div>
       </div>
     </div>
-  </body>
+  </body> 
+
+{literal}
+<script src="..\assets\js\register.js" type="text/javascript"></script>
+{/literal}
 </html> 
+
 {/block}

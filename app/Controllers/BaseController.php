@@ -105,15 +105,14 @@ abstract class BaseController extends Controller
 
     public function checkLogin()
     {
-      
         // Lấy dịch vụ session
         $session = session();
-    
+        // var_dump($session->get('userId'));die;
+
         // Kiểm tra xem thông tin người dùng đã đăng nhập chưa (có session 'logged_in')
         if (!$session->get('userId') || $session->get('userId') == 'NULL') {
             // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
             return redirect()->to('/SmartShop/public/signin');
-            echo "22";die;
         }
     }
 }

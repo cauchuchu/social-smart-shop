@@ -33,12 +33,19 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+$routes->get('dashboard', 'Home::index');
 
 $routes->get('signup', 'Register::index');
 $routes->post('register', 'Register::new');
 
 $routes->get('signin', 'Login::index');
 $routes->post('check-login', 'Login::checkLogin');
+$routes->get('logout', 'Login::logout');
+
+$routes->get('employee', 'Employee::index');
+$routes->get('employee-add', 'Employee::add');
+$routes->post('employee/store', 'Employee::createEmployee');
+$routes->get('employee/(:num)', 'Employee::edit/$1');
 
 $routes->group('news', function ($routes) {
     // $routes->match(['get', 'post'], 'create', [News::class, 'create']);

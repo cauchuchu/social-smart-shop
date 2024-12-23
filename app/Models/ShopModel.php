@@ -28,5 +28,28 @@ class ShopModel extends Model
         return false;
     }
 
+    public function getUnitByShopId($shopId){
+        $builder = $this->db->table('sb_unit'); 
+        $builder->where('shop_id', $shopId);
+        $query = $builder->get(); 
+        $results = $query->getResult();
+        return $results;
+    }
 
+    public function createShopUnit(array $data)
+    {
+        $builder = $this->db->table('sb_unit');
+        $query = $builder->insert($data);
+        if ($query) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteShopUnit($id)
+    {
+        $builder = $this->db->table('sb_unit');
+        return $builder->delete(['id' => $id]);
+    }
 }
