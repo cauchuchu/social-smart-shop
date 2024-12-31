@@ -64,20 +64,27 @@ abstract class BaseController extends Controller
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
         $module = $this->request->uri->getSegment(1);
-        if( $module != 'signin' && $module != 'signup'){
+        if ($module != 'signin' && $module != 'signup') {
             $this->checkLogin();
         }
-       
+
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+
+        // $currentUri = current_url();
+        // $uri = service('uri');
+        // $segments = $uri->getSegments(); // Lấy tất cả các phần tử trong URI
+        
+        // // Giả sử URI có dạng: /module/controller/action
+        // $module = isset($segments[0]) ? $segments[0] : null;
+        // $this->templateSmarty->assign('module', $module);
+
         $this->initSmarty();
     }
 
     protected function smartyDisplay(string $view, array $params = [], $layout = 'layouts/default'): mixed
     {
-      
-
         $this->templateSmarty->assign($params);
 
         if (!file_exists(APPPATH . 'Views/layouts/default.tpl')) {

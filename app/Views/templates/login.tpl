@@ -1,6 +1,7 @@
 {block name="content"}
-<!DOCTYPE html>
-<html lang="vi-VN">
+  <!DOCTYPE html>
+  <html lang="vi-VN">
+
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +12,7 @@
     <script type="text/javascript" src="..\assets\js\bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="..\assets\css\login.css">
   </head>
+
   <body class="login-main">
     <!-- End Google Tag Manager (noscript) -->
     <!--MAIN-CONTENT-->
@@ -19,10 +21,10 @@
         <div class="head-login">
           <div class="info">
             <div class="logo-login">
-              <img src="images/sukien-logo.png">
+              <img src="..\assets\img\a Cầu-02.png">
             </div>
           </div>
-        </div> 
+        </div>
         <div class="form-login-cms">
           <!-- <div class="thumbnail"></div> -->
           <h4 id="login-title">Đăng nhập</h4>
@@ -46,7 +48,8 @@
     </div>
   </body>
   {literal}
-<script src="..\assets\js\register.js" type="text/javascript"></script>
-{/literal}
-</html>
+    <script src="..\assets\js\register.js" type="text/javascript"></script>
+  {/literal}
+
+  </html>
 {/block}

@@ -1,6 +1,7 @@
 {block name="content"}
-<!DOCTYPE html>
-<html lang="vi-VN">
+  <!DOCTYPE html>
+  <html lang="vi-VN">
+
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,12 +13,13 @@
     <link rel="stylesheet" type="text/css" href="..\assets\css\login.css">
     <!-- Google Tag Manager -->
   </head>
+
   <body class="login-main">
     <!--MAIN-CONTENT-->
     <div id="page" class="wrap-main">
-     {if $flasherror}
+      {if $flasherror}
         <div class="alert alert-danger">
-            {$flasherror}
+          {$flasherror}
         </div>
       {/if}
       <div class="main-container">
@@ -29,8 +31,9 @@
             cursor: pointer;
             top: 25px !important;
           }
-          .alert-danger{
-          text-align:right;
+
+          .alert-danger {
+            text-align: right;
           }
         </style>
         <div class="head-login">
@@ -50,8 +53,9 @@
             <input type="number" placeholder="Số điện thoại" class="mobile" name="mobile" required="required">
             <div class="err error-mobile"></div>
             <div style="position: relative;">
-              <input type="password" placeholder="Mật khẩu" class="password" name="password" required="required" style="margin-bottom: 10px">
-              <i class="fa fa-eye show-password" data-toggle="tooltip" title="Ẩn hiện password" aria-hidden="true" ></i>
+              <input type="password" placeholder="Mật khẩu" class="password" name="password" required="required"
+                style="margin-bottom: 10px">
+              <i class="fa fa-eye show-password" data-toggle="tooltip" title="Ẩn hiện password" aria-hidden="true"></i>
               <div class="err error-pass"></div>
             </div>
             <button type="submit" class="btn btn-primary btn-sign-up mt-20">Đăng ký</button>
@@ -61,11 +65,12 @@
         </div>
       </div>
     </div>
-  </body> 
+  </body>
 
-{literal}
-<script src="..\assets\js\register.js" type="text/javascript"></script>
-{/literal}
-</html> 
+  {literal}
+    <script src="..\assets\js\register.js" type="text/javascript"></script>
+  {/literal}
+
+  </html>
 
 {/block}

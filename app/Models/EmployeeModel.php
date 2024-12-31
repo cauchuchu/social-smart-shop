@@ -10,7 +10,7 @@ class EmployeeModel extends Model
     protected $primaryKey = 'id';     // Khóa chính (nếu có)
 
     // Các cột trong bảng được phép thêm hoặc cập nhật
-    protected $allowedFields = ['mobile', 'full_name','password','status','role_id', 'price_pay','shop_id','login_time'];
+    protected $allowedFields = ['avatar','mobile', 'full_name','password','status','role_id', 'price_pay','shop_id','login_time','description'];
 
 
     /**
@@ -72,6 +72,7 @@ class EmployeeModel extends Model
      public function getEmployeesList(array $conditions = [])
      {
          $builder = $this->db->table($this->table);
+         $builder->select($this->table . '.*, sb_role.id as role_id,sb_role.title');
         $where = '';
          // Join bảng sb_role vào bảng nhân viên
          $builder->join('sb_role', 'sb_role.id = ' . $this->table . '.role_id', 'left');
@@ -118,6 +119,7 @@ class EmployeeModel extends Model
      
          // Lấy kết quả
          $results = $builder->get()->getResult();
+       
     
          // Lấy tổng số bản ghi để tính toán phân trang
          $total = $this->db->table($this->table)

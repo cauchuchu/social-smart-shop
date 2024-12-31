@@ -1,23 +1,25 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\EmployeeModel;   
+
+use App\Models\EmployeeModel;
 use App\Models\ShopModel;
 use CodeIgniter\Database\Config;
 use Config\Database;
+
 class Login extends BaseController
 {
     public function index()
     {
         $title = 'Đăng nhập';
         $login = 'register';
-        $flasherror = session()->getFlashdata('error');   
+        $flasherror = session()->getFlashdata('error');
         // return view('welcome_message', ['title' => 'Welcome to CI 4']);
         return $this->smartyDisplay(
             view: 'templates/login',
-            params: compact('title','login','flasherror')
+            params: compact('title', 'login', 'flasherror')
         );
-    } 
+    }
 
 
     public function checkLogin()
@@ -31,20 +33,23 @@ class Login extends BaseController
         $user = $EmployeeModel->where('mobile', $mobile)->first();
 
         if ($user && password_verify($password, $user['password'])) {
-            if($user['status'] == 0){
+            if ($user['status'] == 0) {
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Tài khoản đã tạm ngừng hoạt động, vui lòng liên hệ chủ shop!'
                 ]);
             }
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
+            $data['login_time'] = date('Y-m-d H:i:s');
+            $up = $EmployeeModel->update($user['id'], $data);
             // Đăng nhập thành công
             $session = session();
             $session->set([
                 'isLoggedIn' => true,
                 'userId' => $user['id'],
                 'username' => $user['mobile'],
-                'role' => $user['role_id'], 
-                'shop_id' => $user['shop_id'], 
+                'role' => $user['role_id'],
+                'shop_id' => $user['shop_id'],
             ]);
             return $this->response->setJSON([
                 'success' => true,
@@ -75,5 +80,4 @@ class Login extends BaseController
 
         return redirect()->to('/SmartShop/public/signin');  // Chuyển hướng đến trang đăng nhập
     }
-    
 }

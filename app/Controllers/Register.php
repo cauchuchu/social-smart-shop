@@ -11,11 +11,10 @@ class Register extends BaseController
     {
         $title = 'Đăng ký tài khoản';
         $login = 'register';
-        $flasherror = session()->getFlashdata('error');
         // return view('welcome_message', ['title' => 'Welcome to CI 4']);
         return $this->smartyDisplay(
             view: 'templates/register',
-            params: compact('title', 'login', 'flasherror')
+            params: compact('title', 'login')
         );
     }
 
@@ -23,16 +22,18 @@ class Register extends BaseController
     {
         if ($this->request->getPost('shop_name')) {
             // kiểm tra xem sđt đã đăng ký tk mấy lần rồi
+            // mot sdt co the dang ky toi da 3 shop
             $employeeModel = new EmployeeModel();
             $requestConditions = [
-                'mobile' => $this->request->getPost('mobile')
+                'mobile' => $this->request->getPost('mobile'),
+                'role_id' => 1
             ];
 
             $employees = $employeeModel->getEmployeesByConditions($requestConditions);
-            if ($employees) {
+            if (count($employees) >= 3) {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Số điện thoại ' . $this->request->getPost('mobile') . ' đã được sử dụng!'
+                    'message' => 'Số điện thoại ' . $this->request->getPost('mobile') . ' đã đạt tối đa lần đăng ký cửa hàng!'
                 ]);
             }
             $shopData = [

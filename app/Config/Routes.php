@@ -45,7 +45,13 @@ $routes->get('logout', 'Login::logout');
 $routes->get('employee', 'Employee::index');
 $routes->get('employee-add', 'Employee::add');
 $routes->post('employee/store', 'Employee::createEmployee');
-$routes->get('employee/(:num)', 'Employee::edit/$1');
+$routes->get('employee-edit', 'Employee::edit');
+$routes->get('employee-detail', 'Employee::detailEmployee');
+$routes->post('employee/update', 'Employee::updateEmployee');
+$routes->post('employee/delete', 'Employee::deleteEmployee');
+
+$routes->get('income', 'Income::index');
+$routes->get('income-add', 'Income::add');
 
 $routes->group('news', function ($routes) {
     // $routes->match(['get', 'post'], 'create', [News::class, 'create']);

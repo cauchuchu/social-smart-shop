@@ -2,22 +2,26 @@
 
 namespace App\Controllers;
 
-use App\Models\EmployeeModel;
+use App\Models\InputGoodsModel;
 use App\Models\OrderModel;
 
-class Employee extends BaseController
+class Income extends BaseController
 {
-    protected $employeeModel;
+    protected $inputGoodsModel;
     public function __construct()
     {
         // Khởi tạo đối tượng EmployeeModel
-        $this->employeeModel = new EmployeeModel();
+        $this->inputGoodsModel = new InputGoodsModel();
     }
     public function index()
     {
-        $title = 'Nhân viên';
+        $title = 'Phiếu nhập hàng';
         // get list nhan vien 
         $shopId = $_SESSION['shop_id'];
+        if ($_SESSION['role'] == '2') {
+            return "permission denied";
+            die;
+        }
         $roleadmin = $_SESSION['role'];
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : null;
@@ -30,7 +34,7 @@ class Employee extends BaseController
             'mobile' => $mobile,
         ];
 
-        $resutl =  $this->employeeModel->getEmployeesList($requestConditions);
+        $resutl =  $this->inputGoodsModel->getEmployeesList($requestConditions);
         $list_employee = $resutl['data'];
  
         // return view('welcome_message', ['title' => 'Welcome to CI 4']);
@@ -42,9 +46,9 @@ class Employee extends BaseController
 
     public function add()
     {
-        $title = 'Thêm nhân viên';
+        $title = 'Thêm phiếu nhập hàng';
         return $this->smartyDisplay(
-            view: 'templates/employee_add',
+            view: 'templates/income_add',
             params: compact('title')
         );
     }
@@ -295,11 +299,4 @@ class Employee extends BaseController
             'message' => 'Update employee successful!'
         ]);
     }
-
-    // lay cac unit cua shop
-    // public function getUnitByShopId(){
-    //     $shopId = $_SESSION['shop_id'];
-    //     $employeeUnit =  $this->employeeModel->getUnitByShopId($shopId);
-    //     return $employeeUnit;
-    // }
 }

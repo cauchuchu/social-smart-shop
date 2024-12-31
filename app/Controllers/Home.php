@@ -14,7 +14,7 @@ class Home extends BaseController
         $flashwarning = session()->getFlashdata('warning');
         return $this->smartyDisplay(
             view: 'templates/home',
-            params: compact('title','flashSuccess','flasherror','flashwarning')
+            params: compact('title', 'flashSuccess', 'flasherror', 'flashwarning')
         );
-    } 
+    }
 }
