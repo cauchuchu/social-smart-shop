@@ -19,7 +19,9 @@
   <link rel="stylesheet" href="..\assets\css\base.css" type="text/css">
   <link rel="stylesheet" href="..\assets\css\notify.css" type="text/css">
   <script src="..\assets\lib\jquery\jquery.min.js" type="text/javascript"></script>
-  
+  <link rel="stylesheet" type="text/css" href="..\assets\lib\select2\css\select2.min.css">
+  {* <link rel="stylesheet" type="text/css" href="..\assets\lib\bootstrap-slider\css\bootstrap-slider.min.css">
+   *}
 </head>
 
 <body>

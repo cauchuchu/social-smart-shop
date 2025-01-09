@@ -1,53 +1,6 @@
 {block name='content'}
   <style>
-    .card-body {
-      background: #fff;
-    }
-
-    .btn-twitter {
-      background-color: #2fc664 !important;
-    }
-    .showAvt {
-    cursor: pointer;
-  }
-
-    #table1_filter {
-      margin-bottom: 15px;
-    }
-    .avatarOver {
-      width: 10%;
-    }
-
-    #table1_filter input {
-      width: auto;
-      padding: 5px 10px;
-      font-size: 14px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #imagePreview {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 100%;
-      cursor: pointer;
-    }
-    .card-tables {
-      text-align: right;
-      margin-bottom: 10px;
-    }
-    .icon-container{
-      position: absolute;
-      top: 5px;
-      left: 17px;
-      border-radius: 100%;
-      background-color: unset;
-      display: none;
-    }
    
-    .related_div{
-      position: relative;
-    }
   </style>
   <div class="be-contents">
     <div class="page-head">
@@ -140,7 +93,7 @@
                   <div class="col-sm-6 pl-0">
                     <p class="text-right">
                       <button class="btn btn-space btn-primary saveEmp" type="button">Lưu</button>
-                      <button class="btn btn-space btn-secondary">Hủy</button>
+                      <a href="employee" class="btn btn-space btn-secondary">Quay lại danh sách</a>
                     </p>
                   </div>
                 </div>

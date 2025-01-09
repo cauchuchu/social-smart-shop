@@ -18,7 +18,7 @@
  <script src="..\assets\lib\notify.js" type="text/javascript"></script>
  <script src="..\assets\lib\jqvmap\maps\jquery.vmap.world.js" type="text/javascript"></script>
  <script src="..\assets\js\main.js" type="text/javascript"></script>
-
+  
 
  <script src="..\assets\lib\datatables\datatables.net\js\jquery.dataTables.js" type="text/javascript"></script>
  <script src="..\assets\lib\datatables\datatables.net-bs4\js\dataTables.bootstrap4.js" type="text/javascript"></script>
@@ -41,7 +41,12 @@
    <script src="..\assets\lib\jquery.nestable\jquery.nestable.js" type="text/javascript"></script>
    <script src="..\assets\lib\moment.js\min\moment.min.js" type="text/javascript"></script>
    <script src="..\assets\lib\datetimepicker\js\bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+   {* <script src="..\assets\lib\fuelux\js\wizard.js" type="text/javascript"></script> *}
 
+   <script src="..\assets\lib\select2\js\select2.full.min.js" type="text/javascript"></script>
+   <script src="..\assets\lib\select2\js\select2.min.js" type="text/javascript"></script>
+   {* <script src="..\assets\lib\bootstrap-slider\bootstrap-slider.min.js" type="text/javascript"></script> *}
+   
 
  <script src="..\assets\js\employee.js" type="text/javascript"></script>
  <script type="text/javascript">

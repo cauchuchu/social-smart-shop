@@ -4,36 +4,33 @@ namespace App\Controllers;
 
 use App\Models\ProductModel;
 use App\Models\ShopModel;
-use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Product extends BaseController
 {
     protected $productModel;
     public function __construct()
     {
-        // Khởi tạo đối tượng EmployeeModel
         $this->productModel = new ProductModel();
     }
     public function index()
     {
-        $shopId = $_SESSION['shop_id'];
+        // $shopId = $_SESSION['shop_id'];
         
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : null;
-        $name = isset($_GET['name']) ? (int)$_GET['name'] : null;
-        $status = isset($_GET['status']) ? (int)$_GET['status'] : null;
-        $from_date = isset($_GET['from_date']) ? (int)$_GET['from_date'] : null;
-        $to_date = isset($_GET['to_date']) ? (int)$_GET['to_date'] : null;
-        $requestConditions = [
-            'shop_id' => $shopId,
-            'page' => $page,
-            'product_name' => $name,
-            'status' => $status,
-            'from_date' => $from_date,
-            'to_date' => $to_date,
-        ];
-        $listProduct =  $this->productModel->getProductList($requestConditions);
+        // $page = isset($_GET['page']) ? (int)$_GET['page'] : null;
+        // $name = isset($_GET['name']) ? (int)$_GET['name'] : null;
+        // $status = isset($_GET['status']) ? (int)$_GET['status'] : null;
+        // $from_date = isset($_GET['from_date']) ? (int)$_GET['from_date'] : null;
+        // $to_date = isset($_GET['to_date']) ? (int)$_GET['to_date'] : null;
+        // $requestConditions = [
+        //     'shop_id' => $shopId,
+        //     'page' => $page,
+        //     'product_name' => $name,
+        //     'status' => $status,
+        //     'from_date' => $from_date,
+        //     'to_date' => $to_date,
+        // ];
+        // $listProduct =  $this->productModel->getProductList($requestConditions);
         $data = [
-            'listProduct'  => $listProduct,
             'title' => 'Danh sách sản phẩm'
         ];
         // return view('news/index', $data);
@@ -42,24 +39,49 @@ class Product extends BaseController
             params: $data
         );
     }
+    public function list()
+    {
+        $params = [
+            'shop_id' => $_SESSION['shop_id'],
+            'draw' => $this->request->getGet('draw'),
+            'start' => $this->request->getGet('start'),
+            'length' => $this->request->getGet('length')
+        ];
+        // if($this->request->getGet('from_date')){
+        //     $params['from_date'] = date('Y-m-d 00:00:00', strtotime($this->request->getGet('from_date')));
+        // }
+        // if($this->request->getGet('to_date')){
+        //     $params['to_date'] = date('Y-m-d 23:59:00', strtotime($this->request->getGet('to_date')));
+        // }
+        // if($this->request->getGet('in_by')){
+        //     $params['in_by'] = $this->request->getGet('in_by');
+        // }
+       
+        $list =   $this->productModel->getData($params);
+        return $this->response->setJSON($list);
+    }
 
-    public function ProductDetail()
+    public function detail()
     {
         $id = $this->request->getGet('id');
-        if($id){
+        if(!$id){
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";die;
         }
         $product =  $this->productModel->find($id);
         if (!$product) {
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";
         }
+        $shopId = $_SESSION['shop_id'];
+        $shopModel = new ShopModel();
+        $listUnit = $shopModel->getUnitByShopId($shopId);
+        $title = 'Chi tiết sản phẩm';
         return $this->smartyDisplay(
-            view: 'templates/productDetail',
-            params: compact('title','product')
+            view: 'templates/product_detail',
+            params: compact('title','product','listUnit')
         );
     }
 
-    public function create()
+    public function add()
     {
         $shopId = $_SESSION['shop_id'];
         $shopModel = new ShopModel();
@@ -70,7 +92,7 @@ class Product extends BaseController
             'listUnit' => $listUnit
         ];
         return $this->smartyDisplay(
-            view: 'templates/createProduct',
+            view: 'templates/product_add',
             params: $data
         );
     }
@@ -80,10 +102,9 @@ class Product extends BaseController
         $shopId = $_SESSION['shop_id'];
         // Kiểm tra xem sản phẩm đã tồn tại chưa
         $requestConditions = [
-            'product_name' => $this->request->getPost('product_name'),
+            'product_name' => $this->request->getPost('name'),
             'shop_id' => $shopId
         ];
-
         $product =  $this->productModel->CheckExistProductByName($requestConditions);
         if($product){
             return $this->response->setJSON([
@@ -95,40 +116,38 @@ class Product extends BaseController
         // Xử lý ảnh upload
         $imageFile = $this->request->getFile('image');
         $imageUrl = ''; // Khởi tạo biến chứa URL ảnh
-
         if($imageFile){
-            $imageName = $imageFile->getName(); // Lấy tên gốc của file ảnh
+            $imageName = $imageFile->getName();
 
-            $uploadPath = WRITEPATH . 'uploads/img_' . $shopId . '/'; // Đường dẫn đến thư mục của shop
+            
+            $uploadPath = FCPATH . 'assets/img/img_' . $shopId . '/'; 
 
-            // Kiểm tra nếu thư mục chưa tồn tại thì tạo nó
             if (!is_dir($uploadPath)) {
-                // Tạo thư mục nếu chưa tồn tại
-                mkdir($uploadPath, 0777, true); // - 0777: cấp quyền đọc/ghi cho tất cả mọi người, true để tạo tất cả các thư mục con
+                mkdir($uploadPath, 0777, true); 
             }
 
-            // Kiểm tra nếu file đã tồn tại trong thư mục
             if (!file_exists($uploadPath . $imageName)) {
-                // Di chuyển file vào thư mục lưu trữ
                 $imageFile->move($uploadPath, $imageName);
             }
 
             // URL của ảnh sau khi upload
-            $imageUrl = '/uploads/img_' . $shopId . '/' . $imageName;
+            $imageUrl = 'assets/img/img_' . $shopId . '/' . $imageName;
         }
 
-        $product_name = $this->request->getPost('product_name');
+        $product_name = $this->request->getPost('name');
         $status = $this->request->getPost('status');
         $unit = $this->request->getPost('unit');
-        $price = $this->request->getPost('price');
+        $price = str_replace(",", "", $this->request->getPost('price'));
         $description = $this->request->getPost('description');
         $data = [
             'product_name' => $product_name,
             'status' => $status,
             'unit' => $unit,
             'price' => $price,
+            'shop_id' => $shopId,
             'description' => $description,
             'image' => $imageUrl, 
+            'sold' => 0
         ];
 
         // Gọi model và lưu dữ liệu
@@ -150,7 +169,7 @@ class Product extends BaseController
     public function edit()
     {
         $id = $this->request->getGet('id');
-        if($id){
+        if(!$id){
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";die;
         }
         $product =  $this->productModel->find($id);
@@ -167,15 +186,15 @@ class Product extends BaseController
             'product' => $product,
         ];
         return $this->smartyDisplay(
-            view: 'templates/editProduct',
+            view: 'templates/product_edit',
             params: $data
         );
     }
 
     public function update()
     {
-        $id = $this->request->getGet('id');
-        if($id){
+        $id = $this->request->getPost('id');
+        if(!$id){
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Dữ liệu không hợp lệ!'
@@ -184,11 +203,11 @@ class Product extends BaseController
         $shopId = $_SESSION['shop_id'];
         // Kiểm tra xem sản phẩm đã tồn tại chưa
         $requestConditions = [
-            'product_name' => $this->request->getPost('product_name'),
-            'shop_id' => $shopId
+            'product_name' => $this->request->getPost('name'),
+            'shop_id' => $shopId,
+            'id' => $id
         ];
-
-        $product =  $this->productModel->CheckExistProductByName($requestConditions);
+        $product =  $this->productModel->CheckExistProductByNameById($requestConditions);
         if($product){
             return $this->response->setJSON([
                 'success' => false,
@@ -198,41 +217,38 @@ class Product extends BaseController
 
         // Xử lý ảnh upload
         $imageFile = $this->request->getFile('image');
-        $imageUrl = $this->request->getPost('imageUrl');
-
+        $imageUrl = ''; // Khởi tạo biến chứa URL ảnh
         if($imageFile){
-            $imageName = $imageFile->getName(); // Lấy tên gốc của file ảnh
+            $imageName = $imageFile->getName();
+            $uploadPath = FCPATH . 'assets/img/img_' . $shopId . '/'; 
 
-            $uploadPath = WRITEPATH . 'uploads/img_' . $shopId . '/'; // Đường dẫn đến thư mục của shop
-
-            // Kiểm tra nếu thư mục chưa tồn tại thì tạo nó
             if (!is_dir($uploadPath)) {
-                // Tạo thư mục nếu chưa tồn tại
                 mkdir($uploadPath, 0777, true); 
             }
 
-            // Kiểm tra nếu file đã tồn tại trong thư mục
             if (!file_exists($uploadPath . $imageName)) {
-                // Di chuyển file vào thư mục lưu trữ
                 $imageFile->move($uploadPath, $imageName);
             }
 
             // URL của ảnh sau khi upload
-            $imageUrl = '/uploads/img_' . $shopId . '/' . $imageName;
+            $imageUrl = 'assets/img/img_' . $shopId . '/' . $imageName;
         }
 
-        $product_name = $this->request->getPost('product_name');
+        $product_name = $this->request->getPost('name');
         $status = $this->request->getPost('status');
         $unit = $this->request->getPost('unit');
-        $price = $this->request->getPost('price');
-
+        $price = str_replace(",", "", $this->request->getPost('price'));
+        $description = $this->request->getPost('description');
         $data = [
             'product_name' => $product_name,
             'status' => $status,
             'unit' => $unit,
             'price' => $price,
-            'image' => $imageUrl,
+            'description' => $description
         ];
+        if($imageUrl){
+            $data['image'] = $imageUrl;
+        }
 
         // Gọi model và lưu dữ liệu
         $PId = $this->productModel->update($id,$data);

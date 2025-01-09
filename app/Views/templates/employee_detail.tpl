@@ -1,29 +1,6 @@
 {block name='content'}
     <style>
-        .card-body {
-            background: #fff;
-        }
-
-        .btn-twitter {
-            background-color: #2fc664 !important;
-        }
-
-        #table1_filter {
-            margin-bottom: 15px;
-        }
-
-        #table1_filter input {
-            width: auto;
-            padding: 5px 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .card-tables {
-            text-align: right;
-            margin-bottom: 10px;
-        }
+     
     </style>
     <div class="be-contents">
         <div class="page-head">

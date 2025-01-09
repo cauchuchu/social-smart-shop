@@ -51,7 +51,22 @@ $routes->post('employee/update', 'Employee::updateEmployee');
 $routes->post('employee/delete', 'Employee::deleteEmployee');
 
 $routes->get('income', 'Income::index');
+$routes->get('income/list', 'Income::list');
 $routes->get('income-add', 'Income::add');
+$routes->get('income-edit', 'Income::edit');
+$routes->post('income/store', 'Income::store');
+$routes->post('income/update', 'Income::update');
+$routes->get('income-detail', 'Income::detail');
+$routes->post('income/delete', 'Income::delete');
+$routes->post('shop/add_option', 'Shop::createUnit');
+
+$routes->get('product', 'Product::index');
+$routes->get('product/list', 'Product::list');
+$routes->get('product-add', 'Product::add');
+$routes->post('product/store', 'Product::store');
+$routes->get('product-edit', 'Product::edit');
+$routes->post('product/update', 'Product::update');
+$routes->get('product-detail', 'Product::detail');
 
 $routes->group('news', function ($routes) {
     // $routes->match(['get', 'post'], 'create', [News::class, 'create']);

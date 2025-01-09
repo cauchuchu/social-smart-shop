@@ -33,7 +33,12 @@ class ShopModel extends Model
         $builder->where('shop_id', $shopId);
         $query = $builder->get(); 
         $results = $query->getResult();
-        return $results;
+        $units = [];
+        foreach ($results as $item) {
+            $units[] = (array) $item;  // Chuyển đối tượng thành mảng
+        }
+        
+        return $units;
     }
 
     public function createShopUnit(array $data)
@@ -41,7 +46,8 @@ class ShopModel extends Model
         $builder = $this->db->table('sb_unit');
         $query = $builder->insert($data);
         if ($query) {
-            return true;
+            $insertedId = $this->db->insertID();
+            return $insertedId;
         } else {
             return false;
         }

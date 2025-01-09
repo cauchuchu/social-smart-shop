@@ -3,156 +3,160 @@
 namespace App\Controllers;
 
 use App\Models\InputGoodsModel;
+use App\Models\EmployeeModel;
+use App\Models\ShopModel;
 use App\Models\OrderModel;
 
 class Income extends BaseController
 {
     protected $inputGoodsModel;
+    protected $employeeModel;
+    protected $shopModel;
     public function __construct()
     {
-        // Khởi tạo đối tượng EmployeeModel
         $this->inputGoodsModel = new InputGoodsModel();
+        $this->employeeModel = new EmployeeModel();
+        $this->shopModel = new ShopModel();
     }
     public function index()
     {
         $title = 'Phiếu nhập hàng';
-        // get list nhan vien 
-        $shopId = $_SESSION['shop_id'];
-        if ($_SESSION['role'] == '2') {
-            return "permission denied";
-            die;
-        }
-        $roleadmin = $_SESSION['role'];
-
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : null;
-        $name = isset($_GET['name']) ? (int)$_GET['name'] : null;
-        $mobile = isset($_GET['mobile']) ? (int)$_GET['mobile'] : null;
         $requestConditions = [
-            'shop_id' => $shopId,
-            'page' => $page,
-            'full_name' => $name,
-            'mobile' => $mobile,
+            'shop_id' =>$_SESSION['shop_id'],
+            'status' => 1
         ];
-
-        $resutl =  $this->inputGoodsModel->getEmployeesList($requestConditions);
-        $list_employee = $resutl['data'];
- 
-        // return view('welcome_message', ['title' => 'Welcome to CI 4']);
+        $listEmplOn =  $this->employeeModel->getEmployeesList($requestConditions);
+        if($listEmplOn){
+            $employeeList = $listEmplOn['data'];
+        }
+        
         return $this->smartyDisplay(
-            view: 'templates/employee',
-            params: compact('title', 'list_employee', 'roleadmin')
+            view: 'templates/income',
+            params: compact('title','employeeList')
         );
+    }
+
+    public function list()
+    {
+        $params = [
+            'shop_id' => $_SESSION['shop_id'],
+            'draw' => $this->request->getGet('draw'),
+            'start' => $this->request->getGet('start'),
+            'length' => $this->request->getGet('length')
+        ];
+        if($this->request->getGet('from_date')){
+            $params['from_date'] = date('Y-m-d 00:00:00', strtotime($this->request->getGet('from_date')));
+        }
+        if($this->request->getGet('to_date')){
+            $params['to_date'] = date('Y-m-d 23:59:00', strtotime($this->request->getGet('to_date')));
+        }
+        if($this->request->getGet('in_by')){
+            $params['in_by'] = $this->request->getGet('in_by');
+        }
+       
+        $list =   $this->inputGoodsModel->getData($params);
+        return $this->response->setJSON($list);
     }
 
     public function add()
     {
         $title = 'Thêm phiếu nhập hàng';
+        $shopId = $_SESSION['shop_id'];
+        $ranId = rand(100, 9999);
+        //
+        $requestConditions = [
+            'shop_id' => $shopId,
+            'status' => 1
+        ];
+        $listEmplOn =  $this->employeeModel->getEmployeesList($requestConditions);
+        if($listEmplOn){
+            $employeeList = $listEmplOn['data'];
+        }
+        //
+        $paramUnit = [
+            'shop_id' => $shopId
+        ];
+        $listUnit = $this->shopModel->getUnitByShopId($paramUnit);
         return $this->smartyDisplay(
             view: 'templates/income_add',
-            params: compact('title')
+            params: compact('title', 'employeeList', 'listUnit', 'ranId')
         );
     }
 
-    public function createEmployee()
+    public function store()
     {
-      
         if ($_SESSION['role'] == '2') {
             return "permission denied";
             die;
         }
-        // kiểm tra xem sđt đã đăng ký tk mấy lần trong shop nay rồi
-        $shop_id = $_SESSION['shop_id'];
-        $requestConditions = [
-            'mobile' => $this->request->getPost('mobile'),
-            'shop_id' => $shop_id
-        ];
-
-        $employees =  $this->employeeModel->getEmployeesByConditions($requestConditions);
-        if ($employees) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Số điện thoại đã được sử dụng!'
-            ]);
-        }
-        // Xử lý ảnh upload
-        $imageFile = $this->request->getFile('avatar');
-     
-        $imageUrl = ''; // Khởi tạo biến chứa URL ảnh
-
-        if ($imageFile) {
-            $imageUrl = ''; // Khởi tạo biến chứa URL ảnh
-            $imageName = $imageFile->getName(); // Lấy tên gốc của file ảnh
-
-            $uploadPath = FCPATH . 'assets/img/img_' . $shop_id . '/'; 
-
-            // Kiểm tra nếu thư mục chưa tồn tại thì tạo nó
-            if (!is_dir($uploadPath)) {
-                // Tạo thư mục nếu chưa tồn tại
-                mkdir($uploadPath, 0777, true); // - 0777: cấp quyền đọc/ghi cho tất cả mọi người, true để tạo tất cả các thư mục con
-            }
-
-            // Kiểm tra nếu file đã tồn tại trong thư mục
-            if (!file_exists($uploadPath . $imageName)) {
-                // Di chuyển file vào thư mục lưu trữ
-                $imageFile->move($uploadPath, $imageName);
-            }
-            // URL của ảnh sau khi upload
-            $imageUrl = 'assets/img/img_' . $shop_id . '/' . $imageName;
-        }
-
-        $name = $this->request->getPost('full_name');
-        $mobile = $this->request->getPost('mobile');
-        $password = $this->request->getPost('password');
-        $role_id = $this->request->getPost('role_id');
-        $status = $this->request->getPost('status');
+        $shopId = $_SESSION['shop_id'];
+        $id_bill = $this->request->getPost('id_bill');
+        $date_in = date('Y-m-d H-i:s', strtotime($this->request->getPost('date_in')));
+        $detail_product = $this->request->getPost('detail_product');
+        $in_by = $this->request->getPost('in_by');
+        $total_in = str_replace(",", "", $this->request->getPost('total_in'));
         $description = $this->request->getPost('description');
-        $price_pay = str_replace(",", "", $this->request->getPost('price_pay'));
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        $data = [
-            'mobile'     => $mobile,
-            'full_name' => $name,
-            'password'    => $hashedPassword,
-            'role_id'    => $role_id,
-            'status'    => $status,
-            'shop_id'  => $shop_id,
-            'description'  => $description,
-            'price_pay'  => $price_pay,
-            'avatar'  => $imageUrl,
-        ];
 
-        // Gọi model và lưu dữ liệu
-        $eId =   $this->employeeModel->createEmployee($data);
+        $data = [
+            'shop_id' => $shopId,
+            'id_bill'     => $id_bill,
+            'date_in' => $date_in,
+            'detail'    => $detail_product,
+            'total'    => $total_in,
+            'in_by'    => $in_by,
+            'description'  => $description
+        ];
+        // var_dump($data);die;
+        $eId =   $this->inputGoodsModel->createBill($data);
         if ($eId) {
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'Create employee successful!'
+                'message' => 'Create Bill successful!'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Create Bill false!'
             ]);
         }
     }
 
-    public function detailEmployee()
+    public function detail()
     {
-        $title = 'Chi tiết nhân viên';
+        $title = 'Chi tiết phiếu nhập hàng';
         $id = $this->request->getGet('id');
+        $shopId = $_SESSION['shop_id'];
         if (!$id) {
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";
             die;
         }
 
-        // Sử dụng phương thức find để lấy nhân viên theo ID
-        $employee =  $this->employeeModel->find($id);
-
-        if (!$employee) {
+        $bill =  $this->inputGoodsModel->find($id);
+        if (!$bill) {
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";
         }
-
+        $detail_product = json_decode(html_entity_decode($bill['detail']), true);
+        $productList = $detail_product['list_detail'];
+        $requestConditions = [
+            'shop_id' => $shopId,
+            'status' => 1
+        ];
+        $listEmplOn =  $this->employeeModel->getEmployeesList($requestConditions);
+        if($listEmplOn){
+            $employeeList = $listEmplOn['data'];
+        }
+        //
+        $paramUnit = [
+            'shop_id' => $shopId
+        ];
+        $listUnit = $this->shopModel->getUnitByShopId($paramUnit);
         return $this->smartyDisplay(
-            view: 'templates/employee_detail',
-            params: compact('title', 'employee')
+            view: 'templates/income_detail',
+            params: compact('title', 'bill','employeeList','listUnit','productList')
         );
     }
 
-    public function deleteEmployee()
+    public function delete()
     {
         if ($_SESSION['role'] == '2') {
             return "permission denied";
@@ -165,58 +169,66 @@ class Income extends BaseController
                 'message' => 'Dữ liệu không hợp lệ!'
             ]);
         }
-        
-        $employee =  $this->employeeModel->find($id);
-       
-        if (!$employee) {
+
+        $bill =  $this->inputGoodsModel->find($id);
+        if (!$bill) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Dữ liệu không hợp lệ hoặc đã bị xóa!'
             ]);
         }
-        // delete in sb_employee
-       
-        $del =  $this->employeeModel->delete($id);
-       
+
+        $del =  $this->inputGoodsModel->delete($id);
+
         if ($del) {
-            // add assigned to admin shop in sb_order
-
-            $order_model = new OrderModel();
-            $rmAssigned = $order_model->updateAssignedEmpDelete($id);
-
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'Delete employee successful!'
+                'message' => 'Delete successful!'
             ]);
         } else {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Delete employee Error!'
+                'message' => 'Delete Error!'
             ]);
         }
     }
 
     public function edit()
     {
-        $title = 'Chỉnh sửa nhân viên';
+        $title = 'Chỉnh sửa phiếu nhập hàng';
         $id = $this->request->getGet('id');
+        $shopId = $_SESSION['shop_id'];
         if (!$id) {
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";
             die;
         }
 
-        // Sử dụng phương thức find để lấy nhân viên theo ID
-        $employee =  $this->employeeModel->find($id);
-        if (!$employee) {
+        $bill =  $this->inputGoodsModel->find($id);
+        if (!$bill) {
             return "Dữ liệu không hợp lệ hoặc đã bị xóa!";
         }
+        $detail_product = json_decode(html_entity_decode($bill['detail']), true);
+        $productList = $detail_product['list_detail'];
+        $requestConditions = [
+            'shop_id' => $shopId,
+            'status' => 1
+        ];
+        $listEmplOn =  $this->employeeModel->getEmployeesList($requestConditions);
+        if($listEmplOn){
+            $employeeList = $listEmplOn['data'];
+        }
+        //
+        $paramUnit = [
+            'shop_id' => $shopId
+        ];
+        $listUnit = $this->shopModel->getUnitByShopId($paramUnit);
         return $this->smartyDisplay(
-            view: 'templates/employee_edit',
-            params: compact('title', 'employee')
+            view: 'templates/income_edit',
+            params: compact('title', 'bill', 'employeeList', 'listUnit','productList')
         );
     }
 
-    public function updateEmployee()
+    public function update()
     {
         if ($_SESSION['role'] == '2') {
             return "permission denied";
@@ -230,73 +242,24 @@ class Income extends BaseController
                 'message' => 'Dữ liệu không hợp lệ hoặc đã bị xóa!'
             ]);
         }
-        $shop_id = $_SESSION['shop_id'];
-        $requestConditions = [
-            'mobile' => $this->request->getPost('mobile'),
-            'shop_id' => $shop_id
-        ];
-       
-        $employees = $this->employeeModel->getEmployeesByConditions($requestConditions);
-
-        if($employees[0]['mobile'] != $this->request->getPost('mobile')){
-            if ($employees) {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Số điện thoại ' . $this->request->getPost('mobile') . ' đã được sử dụng!'
-                ]);
-            }
-        }
-        
-        // Xử lý ảnh upload
-        $imageFile = $this->request->getFile('avatar');
-
-        if ($imageFile) {
-            $imageUrl = ''; // Khởi tạo biến chứa URL ảnh
-            $imageName = $imageFile->getName(); // Lấy tên gốc của file ảnh
-
-            $uploadPath = FCPATH . 'assets/img/img_' . $shop_id . '/'; 
-
-            // Kiểm tra nếu thư mục chưa tồn tại thì tạo nó
-            if (!is_dir($uploadPath)) {
-                // Tạo thư mục nếu chưa tồn tại
-                mkdir($uploadPath, 0777, true); // - 0777: cấp quyền đọc/ghi cho tất cả mọi người, true để tạo tất cả các thư mục con
-            }
-
-            // Kiểm tra nếu file đã tồn tại trong thư mục
-            if (!file_exists($uploadPath . $imageName)) {
-                // Di chuyển file vào thư mục lưu trữ
-                $imageFile->move($uploadPath, $imageName);
-            }
-            // URL của ảnh sau khi upload
-            $imageUrl = 'assets/img/img_' . $shop_id . '/' . $imageName;
-        }
-       
-        $name = $this->request->getPost('full_name');
-        $role = $this->request->getPost('role_id');
-        $status = $this->request->getPost('status');
+        $date_in = $this->request->getPost('date_in');
+        $detail = $this->request->getPost('detail');
+        $in_by = $this->request->getPost('in_by');
+        $total_in = str_replace(",", "", $this->request->getPost('total_in'));
         $description = $this->request->getPost('description');
-        $price_pay = $numberWithoutCommas = str_replace(",", "", $this->request->getPost('price_pay'));
-        $mobile = $this->request->getPost('mobile');
         $id = $this->request->getPost('id');
         $data = [
-            'full_name' => $name,
-            'role_id' => $role,
-            'status' => $status,
-            'mobile' => $mobile,
+            'date_in' => $date_in,
+            'detail' => $detail,
+            'in_by' => $in_by,
+            'total' => $total_in,
+            'description' => $description,
         ];
-        if ($description) {
-            $data['description'] = $description;
-        }
-        if ($price_pay) {
-            $data['price_pay'] = $price_pay;
-        }
-        if ($imageFile) {
-            $data['avatar'] = $imageUrl;
-        }
-        $up = $this->employeeModel->update($id, $data);
+
+        $up = $this->inputGoodsModel->update($id, $data);
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Update employee successful!'
+            'message' => 'Update bill successful!'
         ]);
     }
 }

@@ -19,7 +19,7 @@
             </a>
           </li>
           <li class="parent">
-              <a href="#">
+              <a href="product">
                 <i class="icon mdi mdi-dot-circle"></i>
                 <span>Sản phẩm</span>
               </a>
