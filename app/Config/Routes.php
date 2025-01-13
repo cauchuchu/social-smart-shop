@@ -68,6 +68,22 @@ $routes->get('product-edit', 'Product::edit');
 $routes->post('product/update', 'Product::update');
 $routes->get('product-detail', 'Product::detail');
 
+$routes->get('customer', 'Customer::index');
+$routes->get('customer/list', 'Customer::list');
+$routes->get('customer-add', 'Customer::add');
+$routes->post('customer/store', 'Customer::store');
+$routes->get('customer-edit', 'Customer::edit');
+$routes->post('customer/update', 'Customer::update');
+$routes->get('customer-detail', 'Customer::detail');
+
+$routes->get('order', 'Order::index');
+$routes->get('order/list', 'Order::list');
+$routes->get('order-add', 'Order::add');
+$routes->post('order/store', 'Order::store');
+$routes->get('order-edit', 'Order::edit');
+$routes->post('order/update', 'Order::update');
+$routes->get('order-detail', 'Order::detail');
+
 $routes->group('news', function ($routes) {
     // $routes->match(['get', 'post'], 'create', [News::class, 'create']);
 

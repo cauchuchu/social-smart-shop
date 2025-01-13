@@ -92,3 +92,70 @@ define('EVENT_PRIORITY_NORMAL', 100);
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
 define('EVENT_PRIORITY_HIGH', 10);
+
+
+define('ROLE_ADMIN', 1);
+define('ROLE_USER', 2);
+
+define('STATUS_ACTIVE_PRODUCT', 1);
+define('STATUS_INACTIVE_PRODUCT', 0);
+define('STATUS_ACTIVE_EMPLOYEE', 1);
+define('STATUS_INACTIVE_EMPLOYEE', 0);
+
+define('ORDER_STATUS_PROCESSING', 0);
+define('ORDER_STATUS_DELIVERING', 1);
+define('ORDER_STATUS_DONE', 2);
+define('ORDER_STATUS_REFUND', 3);
+define('ORDER_STATUS_CANCEL', 4);
+
+define('ORDER_STATUS_PROCESSING_VALUE', 'Đang xử lý');
+define('ORDER_STATUS_DELIVERING_VALUE', 'Đang giao');
+define('ORDER_STATUS_DONE_VALUE', 'Thành công');
+define('ORDER_STATUS_REFUND_VALUE', 'Hoàn hàng');
+define('ORDER_STATUS_CANCEL_VALUE', 'Hủy');
+
+define('ORDER_STATUS_PAYMENT_NONE', 0); // khong xu ly
+define('ORDER_STATUS_PAYMENT_NO', 1); // khong tra
+define('ORDER_STATUS_PAYMENT_NOTYET', 2); // chua thanh toan
+define('ORDER_STATUS_PAYMENT_DONE', 3); // da thanh toan 
+
+define('ORDER_STATUS_PAYMENT_NONE_VALUE', 'Đơn hủy'); // khong xu ly
+define('ORDER_STATUS_PAYMENT_NO_VALUE', 'Không trả'); // khong tra
+define('ORDER_STATUS_PAYMENT_NOTYET_VALUE', 'Chưa T.Toán'); // chua thanh toan
+define('ORDER_STATUS_PAYMENT_DONE_VALUE', 'Đã T.Toán'); // da thanh toan 
+
+define('CUSTOMER_BLACK', 1);
+
+define('ORDER_ACTIVE_STATUS', 1);
+
+function getOrderStatusDeliveryValue($status_code) {
+    switch ($status_code) {
+        case ORDER_STATUS_PROCESSING:
+            return ORDER_STATUS_PROCESSING_VALUE;
+        case ORDER_STATUS_DELIVERING:
+            return ORDER_STATUS_DELIVERING_VALUE;
+        case ORDER_STATUS_DONE:
+            return ORDER_STATUS_DONE_VALUE;
+        case ORDER_STATUS_REFUND:
+            return ORDER_STATUS_REFUND_VALUE;
+        case ORDER_STATUS_CANCEL:
+            return ORDER_STATUS_CANCEL_VALUE;
+        default:
+            return 'Trạng thái không hợp lệ';
+    }
+}
+
+function getOrderStatusPaymentValue($status_code) {
+    switch ($status_code) {
+        case ORDER_STATUS_PAYMENT_NONE:
+            return ORDER_STATUS_PAYMENT_NONE_VALUE;
+        case ORDER_STATUS_PAYMENT_NO:
+            return ORDER_STATUS_PAYMENT_NO_VALUE;
+        case ORDER_STATUS_PAYMENT_NOTYET:
+            return ORDER_STATUS_PAYMENT_NOTYET_VALUE;
+        case ORDER_STATUS_PAYMENT_DONE:
+            return ORDER_STATUS_PAYMENT_DONE_VALUE;
+        default:
+            return 'Trạng thái không hợp lệ';
+    }
+}

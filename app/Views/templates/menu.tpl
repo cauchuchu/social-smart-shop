@@ -30,6 +30,13 @@
                 <span>Đơn hàng</span>
               </a>
             </li>
+
+            <li class="parent">
+              <a href="customer">
+                <i class="icon mdi mdi-face"></i>
+                <span>Khách hàng</span>
+              </a>
+            </li>
           
             
             <li class="parent">

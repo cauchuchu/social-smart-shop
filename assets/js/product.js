@@ -54,7 +54,9 @@ $(document).ready(function () {
                 "data": null, 
                 "render": function(data, type, row) {
                     return '<div class="d-flex"><div><a href="product-edit?id=' + row.id + '" class="btn btn-space btn-primary" type="button"> Sửa</a></div>' +
-                           ' <div><button class="btn btn-space btn-danger btnDelProduct" attr-id="' + row.id + '"><i class="icon icon-left mdi mdi-alert-circle"></i>Xóa</button></div></div>';
+    (row.status == 1 ? ' <div><button class="btn btn-space btn-danger btnDelProduct" attr-id="' + row.id + '"><i class="icon icon-left mdi mdi-alert-circle"></i>Xóa</button></div>' : '') +
+    '</div>';
+
                 }
             }
         ],
@@ -200,10 +202,8 @@ $(document).ready(function () {
                 type: 'POST',
                 data: {
                     id : id,
-                    status : 0
+                    status : '0'
                 },
-                processData: false,
-                contentType: false,
                 success: function (response) {
                     if (response.success) {
                         notify('Chỉnh sửa thành công!','success');

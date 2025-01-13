@@ -147,7 +147,19 @@ class ProductModel extends Model
         return false;
     }
 
-    
+    public function getProductShopActive($shopId){
+        $builder = $this->db->table('sb_products'); 
+        $builder->where('shop_id', $shopId);
+        $builder->where('status', STATUS_ACTIVE_PRODUCT);
+        $query = $builder->get(); 
+        $results = $query->getResult();
+        $products = [];
+        foreach ($results as $item) {
+            $products[] = (array) $item;
+        }
+        
+        return $products;
+    }
 
 
 }

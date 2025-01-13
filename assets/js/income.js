@@ -17,7 +17,7 @@ $(document).ready(function () {
     });
     $("#from_date,#to_date").datetimepicker({
         autoclose:!0,componentIcon:".mdi.mdi-calendar",
-        format:"mm/dd/yyyy",
+        format:"dd/mm/yyyy",
         navIcons:{rightIcon:"mdi mdi-chevron-right",leftIcon:"mdi mdi-chevron-left"}});
 
     $('#in_by').select2();
